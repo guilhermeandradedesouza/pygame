@@ -10,18 +10,22 @@ class Crepper(pygame.sprite.Sprite):
         self.frame=0
         self.imagens=[]
         self.y=250
-        self.x=840
+        self.x=600
         self.image=pygame.transform.scale(pygame.image.load('creeper/crepper_frente.png').subsurface((0,0),(32,32)),(320,320))
         self.rect=self.image.get_rect()
         self.rect.topleft=self.x%841,self.y
     def parado(self):self.acontecendo_direita=self.acontecendo_esquerda=False
     def lado_esquerda(self):
-        self.acontecendo_esquerda=True
-        self.acontecendo_direita=False
+        self.x-=1
+        if self.acontecendo_direita:self.frame=0
+        self.acontecendo_esquerda,self.acontecendo_direita=True,False
         self.imagens=[pygame.transform.scale(pygame.image.load('creeper/crepper_lado_esquerda.png').subsurface((0,32*x),(32,32)),(400,400)) for x in range(2)]
+        self.image=self.imagens[self.frame%2]
     def lado_direito(self):
-        self.acontecendo_direita=True
-        self.acontecendo_esquerda=False
+        self.x+=1
+        print(self.x)
+        if self.acontecendo_esquerda:self.frame=0
+        self.acontecendo_direita,self.acontecendo_esquerda=True,False
         self.imagens = [pygame.transform.scale(pygame.image.load('creeper/crepper_lado_direita.png').subsurface((0,32*x),(32,32)),(400,400)) for x in range(2)]
         self.image = self.imagens[self.frame%2]
     def update(self):
@@ -30,12 +34,10 @@ class Crepper(pygame.sprite.Sprite):
             self.image=self.imagens[self.frame%3]
             self.frame+=1
         else:
-            if self.lado_direito:
-                self.frame+=1
-                self.image=self.imagens[self.frame%2]
-            else:
-                self.frame += 1
-                self.image = self.imagens[self.frame % 2]
+            self.frame+=1
+            self.image = self.imagens[self.frame % 2]
+            if self.lado_direito:self.x+=1
+            else:self.x-=1
         self.acontecendo_esquerda=self.acontecendo_direita=False
 crepper=Crepper()
 creppers=pygame.sprite.Group()
