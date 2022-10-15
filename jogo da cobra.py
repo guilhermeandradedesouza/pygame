@@ -4,6 +4,7 @@ from pygame.locals import *
 import pygame
 pygame.init()
 lista_cobra=[]
+lista_obstaculo=[]
 pontos=movimento_y=movimento_x=0
 tela=pygame.display.set_mode((800,600))
 pygame.display.set_caption('jogo da cobrinha')
@@ -38,8 +39,11 @@ while True:
             if lista_cobra.count(XeY) > 1: encontro = True
         if cobra.colliderect(maca):
             pygame.mixer.Sound('smw_coin.wav').play()
+            lista_obstaculo.append((randint(40,750),randint(40,550),30,30))
             maca_x,maca_y=randint(40,750),randint(40,550)
             pontos+=1
+        for obst in lista_obstaculo:
+            if rect(tela,'yellow',obst,0,10).colliderect(cobra):encontro=True
         cobra_x+=movimento_x
         cobra_y+=movimento_y
         tela.blit(pygame.font.SysFont('arial',20).render(f'Pontos:{pontos}',True,(120,10,100)),(10,10))

@@ -23,7 +23,6 @@ class Crepper(pygame.sprite.Sprite):
         self.image=self.imagens[self.frame%2]
     def lado_direito(self):
         self.x+=1
-        print(self.x)
         if self.acontecendo_esquerda:self.frame=0
         self.acontecendo_direita,self.acontecendo_esquerda=True,False
         self.imagens = [pygame.transform.scale(pygame.image.load('creeper/crepper_lado_direita.png').subsurface((0,32*x),(32,32)),(400,400)) for x in range(2)]

@@ -9,9 +9,8 @@ while 1:
     tela.fill('black')
     for evento in pygame.event.get():
         if evento.type==QUIT:exit()
-        if evento.type==KEYDOWN:
-            if pygame.key.get_pressed()[K_a]:tela.fill('blue')
-            elif pygame.key.get_pressed()[K_d]:tela.fill('white')
+        if pygame.key.get_pressed()[K_a]:tela.fill('blue')
+        elif pygame.key.get_pressed()[K_d]:tela.fill('white')
         else:
             print(f'parada {a}')
             a+=1
