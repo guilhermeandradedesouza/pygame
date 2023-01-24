@@ -1,0 +1,7 @@
+ijsvplcbhzrktnqewoxfuyagm
+mraptxzuehvqnibcgdfolskjy
+gkxuojqwzfphvcamirbesndty
+kmonsqepaytcgvxvariavel=True
+loop:
+    if func() and variavel:func2()
+    variavel=not bool(func())
