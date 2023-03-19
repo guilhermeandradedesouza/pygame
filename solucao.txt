@@ -1,7 +1,10 @@
-ijsvplcbhzrktnqewoxfuyagm
-mraptxzuehvqnibcgdfolskjy
-gkxuojqwzfphvcamirbesndty
-kmonsqepaytcgvxvariavel=True
+variavel=True
 loop:
     if func() and variavel:func2()
     variavel=not bool(func())
+ex 2:
+variavel=True
+loop:
+    variavel=func() if variavel else False
+    ...
+    variavel=not func()
