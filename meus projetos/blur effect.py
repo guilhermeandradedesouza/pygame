@@ -4,6 +4,7 @@ from pygame.mouse import get_pos,get_pressed,set_visible
 from pygame.draw import circle
 from pygame.surface import Surface
 from random import randint,choice
+v=.55
 class Target:
     cores=[]
     for r in range(80,256):
@@ -15,7 +16,7 @@ class Target:
         self.gradual=1
     def mostrar(self):
         self.circulo=circle(tela,self.cor,self.center,self.gradual)
-        self.center=(self.center[0],self.center[1]+.35)
+        self.center=(self.center[0],self.center[1]+v)
         self.gradual+=.1 if int(self.gradual)<20 else 0
     def reset(self,center):
         self.cor=choice(self.cores)

@@ -29,7 +29,7 @@ class Timer:
 
 class Mouse:
     from pygame import mouse
-    def __init__(self,smooth_coefficient:int|float,visibilidade:bool):
+    def __init__(self,smooth_coefficient:float,visibilidade:bool):
         self.mouse.set_visible(visibilidade)
         self.smooth=smooth_coefficient
         self.pos=list(self.mouse.get_pos())
@@ -38,6 +38,47 @@ class Mouse:
         self.pos[0]+=(actual_pos[0]-self.pos[0])/self.smooth
         self.pos[1]+=(actual_pos[1]-self.pos[1])/self.smooth
         return self.pos
+
+class Pressed:
+    def __init__(self,key):
+        self.key=key
+        self.is_pressed=False
+    def get(self):
+        from pygame.key import get_pressed as pressed
+        if not pressed()[self.key]:self.is_pressed=False
+        elif not self.is_pressed and pressed()[self.key]:
+            self.is_pressed=True
+            return True
+        return False
+
+class Menu:
+    def __init__(self,display:pygame.Surface,mouse:Mouse,background,in_pause=False):
+        self.click=Click(0)
+        self.disp=display
+        self.bk=background
+        self.mouse=mouse
+        self.state=in_pause
+        self.surfs={}
+
+    def add_surface(self,surface:pygame.Surface,pos:tuple,key,func=None):
+        self.surfs[key]=[surface,pos,func]
+
+    def get_state(self):return self.state
+
+    def set_state(self,state):self.state=state
+
+    def update(self):
+        self.disp.fill(self.bk)
+        for surf,pos,func in self.surfs.values():
+            surf_rect=surf.get_rect(topleft=pos)
+            self.disp.blit(surf,pos)
+            if func and surf_rect.collidepoint(self.mouse.get_pos()) and self.click.get():func()
+
+    def __getitem__(self,key):return self.surfs.get(key,None)
+
+    def __delitem__(self,key):del self.surfs[key]
+
+    def __setitem__(self,key,value):self.surfs[key]=value
 
 class Click:
     def __init__(self,m_button):
@@ -69,7 +110,7 @@ class Enemy:
         self.player=player
 
         self.pos=start
-        self.r=raio
+        self.const_r=self.r=raio
         self.speed=speed
 
         self.damage_color=ext.get('damage_color','green')
@@ -98,6 +139,7 @@ class Enemy:
             circle(self.disp,color,self.pos,self.r)
             pygame.display.flip()
             pygame.time.wait(20)
+
         while self.r>1:
             self.disp.fill('black')
             for rotate in range(0,360,30):polygon(self.disp,self.damage_color,regular_polygon(3,self.pos,self.r,rotate))
@@ -105,7 +147,7 @@ class Enemy:
             self.r*=self.q
             pygame.display.flip()
 
-        return Enemy(self.disp,self.player,self.pos,30,4,color=self.damage_color,life=1)
+        return Enemy(self.disp,self.player,self.pos,self.const_r/2,4,color=self.damage_color,life=1)
 
 class Player:
     def __init__(self,display:pygame.Surface,raio:int,mouse:Mouse,**ext):
@@ -194,7 +236,3 @@ class Player:
     def state(self):
         if self.width>=self.r:return self.defeat_message
         return False
-
-def show_text(display:pygame.Surface,text,size,pos,color='black',font='arial'):
-    fonte=pygame.font.SysFont(font,size)
-    display.blit(fonte.render(text,True,color),pos)
